@@ -89,7 +89,7 @@ cdef class Detector:
         :return:
         """
         self.net = load_network(config, weights, p)
-        if (NULL != meda):
+        if (NULL != meta):
             self.meta = get_metadata(meta)
 
     # Code adapted from https://github.com/pjreddie/darknet/blob/master/python/darknet.py
@@ -105,9 +105,10 @@ cdef class Detector:
         :return: Sorted list of <Label ID, Score> tuples.
         """
         out = network_predict_image(self.net, img.img)
-        if not with_label or self.meta is None:
-            out_arr = [0] * self.net.outputs
-            for i in range(self.net.outputs):
+        if not with_label or NULL != self.meta.names:
+            size = self.net.outputs
+            out_arr = [0] * size
+            for i in range(size):
                 out_arr[i] = out[i]
             return out_arr
 

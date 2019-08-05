@@ -28,7 +28,8 @@ cdef extern from "bridge.h":
         int sort_class
 
     cdef struct network:
-        pass
+        int outputs
+        float *output
 
     ctypedef struct metadata:
         int classes
