@@ -79,7 +79,7 @@ cdef class Detector:
     cdef network* net
     cdef metadata meta
 
-    def __cinit__(self, char* config, char* weights, int p, char* meta):
+    def __cinit__(self, char* config, char* weights, int p = 0, char* meta = NULL):
         """
         Initialize a Darknet Model.
         :param config: Path to config file.
