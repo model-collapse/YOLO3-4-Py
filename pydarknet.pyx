@@ -106,7 +106,10 @@ cdef class Detector:
         """
         out = network_predict_image(self.net, img.img)
         if not with_label or self.meta is None:
-            return out
+            out_arr = [0] * self.net.outputs
+            for i in range(self.net.outputs):
+                out_arr[i] = out[i]
+            return out_arr
 
         res = []
         for i in range(self.meta.classes):
