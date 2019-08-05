@@ -89,17 +89,25 @@ cdef class Detector:
         :return:
         """
         self.net = load_network(config, weights, p)
-        self.meta = get_metadata(meta)
+        if (NULL != meda):
+            self.meta = get_metadata(meta)
 
     # Code adapted from https://github.com/pjreddie/darknet/blob/master/python/darknet.py
 
-    def classify(self, Image img):
+    def classify_binary(self, Image img):
+        out = network_predict_image(self.net, img.img)
+        return out[0]
+
+    def classify_multiple(self, Image img, with_label=True):
         """
         Classify an image using the model
         :param img: Image to be classified
         :return: Sorted list of <Label ID, Score> tuples.
         """
         out = network_predict_image(self.net, img.img)
+        if not with_label or self.meta is None:
+            return out
+
         res = []
         for i in range(self.meta.classes):
             res.append((self.meta.names[i], out[i]))
