@@ -146,10 +146,11 @@ cdef class Detector:
                         res.append((self.meta.names[i], dets[j].prob[i], (b.x, b.y, b.w, b.h)))
         else:
             for j in range(num):
-                for i in range(self.meta.classes):
-                    if dets[j].prob[i] > 0:
-                        b = dets[j].bbox
-                        res.append((i, dets[j].prob[i], (b.x, b.y, b.w, b.h)))
+                det = dets[j]
+                for i in range(det.classes):
+                    if det.prob[i] > 0:
+                        b = det.bbox
+                        res.append((i, det.prob[i], (b.x, b.y, b.w, b.h)))
 
         res = sorted(res, key=lambda x: -x[1])
 
