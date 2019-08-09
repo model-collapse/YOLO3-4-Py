@@ -137,11 +137,20 @@ cdef class Detector:
             do_nms_obj(dets, num, self.meta.classes, nms)
 
         res = []
-        for j in range(num):
-            for i in range(self.meta.classes):
-                if dets[j].prob[i] > 0:
-                    b = dets[j].bbox
-                    res.append((self.meta.names[i], dets[j].prob[i], (b.x, b.y, b.w, b.h)))
+        
+        if NULL != self.meta.names:
+            for j in range(num):
+                for i in range(self.meta.classes):
+                    if dets[j].prob[i] > 0:
+                        b = dets[j].bbox
+                        res.append((self.meta.names[i], dets[j].prob[i], (b.x, b.y, b.w, b.h)))
+        else:
+            for j in range(num):
+                for i in range(self.meta.classes):
+                    if dets[j].prob[i] > 0:
+                        b = dets[j].bbox
+                        res.append((i, dets[j].prob[i], (b.x, b.y, b.w, b.h)))
+
         res = sorted(res, key=lambda x: -x[1])
 
         free_detections(dets, num)
